@@ -30,7 +30,7 @@ if __name__ == "__main__":
     start_time = time.time()
     task = Task.init(
         project_name="default",
-        task_name="parameterized-example-task",
+        task_name="test-task-w-image",
         task_type=Task.TaskTypes.data_processing,
     )
     print(f"Time elapsed for task init: {time.time() - start_time}")

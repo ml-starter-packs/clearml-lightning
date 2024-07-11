@@ -47,3 +47,17 @@ api {
 ```
 
 Run `CLEARML_HOST_IP=<proxy you are testing> python example.py` to override the API host in the `clearml.conf` when testing, switching between `http://0.0.0.0:8008`, the cloudflare tunnel, and the lightning cloudspace hostname.
+
+
+
+## nginx
+
+ClearML makes strong assumptions about the structure of the domains used to host it. Either the port must be at the end of the string, or the subdomains `files`, `app`, and `web` must be used so that the authentication token issued by the ClearML Web UI can be scoped / shared correctly across services.
+
+Since lightning _prefixes_ domains with port numbers for reverse-proxy purposes, we must work around ClearML's assumption and handle our own subdomains by setting up an nginx server as a sidecar container.
+
+This allows us to only open up a single port on the Studio: Port `8000` for `nginx`.
+
+run `make replace (DOMAIN=mydomain.com)` to run `sed` against the `nginx.conf` file in order to configure it for your Studio. If you do not specify `DOMAIN=...` it will use `8000-$LIGHTNING_CLOUDSPACE_HOST`.
+
+

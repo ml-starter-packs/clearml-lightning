@@ -34,7 +34,7 @@ services:
       CLEARML__secure__credentials__services_agent__user_key: ${CLEARML_AGENT_ACCESS_KEY:-}
       CLEARML__secure__credentials__services_agent__user_secret: ${CLEARML_AGENT_SECRET_KEY:-}
     ports:
-    - "8008:8008"
+      - "8008:8008"
     networks:
       - backend
       - frontend
@@ -123,7 +123,7 @@ services:
     depends_on:
       - apiserver
     ports:
-    - "8080:80"
+      - "8080:80"
     networks:
       - backend
       - frontend

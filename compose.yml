@@ -161,40 +161,61 @@ services:
       - ~/opt/clearml/logs:/var/log/clearml
       - ~/opt/clearml/config:/opt/clearml/config
 
-  agent-services:
-    networks:
-      - backend
-    container_name: clearml-agent-services
-    image: allegroai/clearml-agent-services:latest
-    deploy:
-      restart_policy:
-        condition: on-failure
-    privileged: true
-    environment:
-      CLEARML_HOST_IP: ${CLEARML_HOST_IP}
-      CLEARML_WEB_HOST: ${CLEARML_WEB_HOST:-}
-      CLEARML_API_HOST: http://apiserver:8008
-      CLEARML_FILES_HOST: ${CLEARML_FILES_HOST:-}
-      CLEARML_API_ACCESS_KEY: ${CLEARML_AGENT_ACCESS_KEY:-$CLEARML_API_ACCESS_KEY}
-      CLEARML_API_SECRET_KEY: ${CLEARML_AGENT_SECRET_KEY:-$CLEARML_API_SECRET_KEY}
-      CLEARML_AGENT_GIT_USER: ${CLEARML_AGENT_GIT_USER}
-      CLEARML_AGENT_GIT_PASS: ${CLEARML_AGENT_GIT_PASS}
-      CLEARML_AGENT_UPDATE_VERSION: ${CLEARML_AGENT_UPDATE_VERSION:->=0.18.1}
-      CLEARML_AGENT_DEFAULT_BASE_DOCKER: "python:3.10.10"
-      CLEARML_WORKER_BASIC_KEY: ${WORKER_BASIC_KEY:-}
-      CLEARML_WORKER_ID: "clearml-services"
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
-      CLEARML_AGENT_DOCKER_HOST_MOUNT: "/teamspace/studios/this_studio/opt/clearml/agent:/root/.clearml"
-      SHUTDOWN_IF_NO_ACCESS_KEY: 1
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ~/opt/clearml/agent:/root/.clearml
-      - ~/opt/clearml/agent/clearml.conf:/root/clearml.conf
-    depends_on:
-      - apiserver
-    entrypoint: >
-      bash -c "curl --retry 10 --retry-delay 10 --retry-connrefused 'http://apiserver:8008/debug.ping' && /usr/agent/entrypoint.sh"
+  # agent-services:
+  #   networks:
+  #     - backend
+  #   container_name: clearml-agent-services
+  #   image: allegroai/clearml-agent-services:latest
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   privileged: true
+  #   environment:
+  #     CLEARML_HOST_IP: ${CLEARML_HOST_IP}
+  #     CLEARML_WEB_HOST: ${CLEARML_WEB_HOST:-}
+  #     CLEARML_API_HOST: http://apiserver:8008
+  #     CLEARML_FILES_HOST: ${CLEARML_FILES_HOST:-}
+  #     CLEARML_API_ACCESS_KEY: ${CLEARML_AGENT_ACCESS_KEY:-$CLEARML_API_ACCESS_KEY}
+  #     CLEARML_API_SECRET_KEY: ${CLEARML_AGENT_SECRET_KEY:-$CLEARML_API_SECRET_KEY}
+  #     CLEARML_AGENT_GIT_USER: ${CLEARML_AGENT_GIT_USER}
+  #     CLEARML_AGENT_GIT_PASS: ${CLEARML_AGENT_GIT_PASS}
+  #     CLEARML_AGENT_UPDATE_VERSION: ${CLEARML_AGENT_UPDATE_VERSION:->=0.18.1}
+  #     CLEARML_AGENT_DEFAULT_BASE_DOCKER: "python:3.10.10"
+  #     CLEARML_WORKER_BASIC_KEY: ${WORKER_BASIC_KEY:-}
+  #     CLEARML_WORKER_ID: "clearml-services"
+  #     AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+  #     AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+  #     CLEARML_AGENT_DOCKER_HOST_MOUNT: "/teamspace/studios/this_studio/opt/clearml/agent:/root/.clearml"
+  #     SHUTDOWN_IF_NO_ACCESS_KEY: 1
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ~/opt/clearml/agent:/root/.clearml
+  #     - ~/opt/clearml/agent/clearml.conf:/root/clearml.conf
+  #   depends_on:
+  #     - apiserver
+  #   entrypoint: >
+  #     bash -c "curl --retry 10 --retry-delay 10 --retry-connrefused 'http://apiserver:8008/debug.ping' && /usr/agent/entrypoint.sh"
+
+  # proxy:
+  #   container_name: clearml-proxy
+  #   image: nginx:latest
+  #   networks:
+  #     - backend
+  #     - frontend
+  #   ports:
+  #     - "8000:80"
+  #   volumes:
+  #     - ~/nginx.conf:/etc/nginx/nginx.conf
+  #   depends_on:
+  #     - apiserver
+  #     - fileserver
+  #     - webserver
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   environment:
+  #     NGINX_HOST: 8000-${LIGHTNING_CLOUDSPACE_HOST:-}
+  #     NGINX_PORT: 80
 
 networks:
   backend:

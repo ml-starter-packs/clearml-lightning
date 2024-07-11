@@ -28,6 +28,7 @@ def do_work(task, params):
 
 if __name__ == "__main__":
     start_time = time.time()
+    Task.force_requirements_env_freeze(force=True)
     task = Task.init(
         project_name="default",
         task_name="test-task-w-image",

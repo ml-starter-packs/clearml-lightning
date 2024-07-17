@@ -38,8 +38,8 @@ services:
     networks:
       - backend
       - frontend
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
 
   elasticsearch:
     networks:
@@ -160,6 +160,8 @@ services:
     volumes:
       - ~/opt/clearml/logs:/var/log/clearml
       - ~/opt/clearml/config:/opt/clearml/config
+    env_file:
+      - .env
 
   # agent-services:
   #   networks:

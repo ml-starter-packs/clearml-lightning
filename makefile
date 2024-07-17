@@ -7,6 +7,12 @@ restart-web:
 restart-file:
 	docker compose stop fileserver; docker compose up -d --no-deps --force-recreate fileserver
 
+up:
+	docker compose up -d
+
+down:
+	docker compose down
+
 re:
 	docker compose down; docker compose up -d
 

@@ -80,6 +80,7 @@ services:
     image: allegroai/clearml:1.16.1
     environment:
       CLEARML__fileserver__delete__allow_batch: "true"
+      CLEARML__fileserver__auth__enabled: "false"
     restart: unless-stopped
     volumes:
     - ~/opt/clearml/logs:/var/log/clearml

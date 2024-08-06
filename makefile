@@ -7,6 +7,9 @@ restart-web:
 restart-file:
 	docker compose stop fileserver; docker compose up -d --no-deps --force-recreate fileserver
 
+restart-elastic:
+	docker compose stop elasticsearch; docker compose up -d --no-deps --force-recreate elasticsearch
+
 up:
 	docker compose up -d
 

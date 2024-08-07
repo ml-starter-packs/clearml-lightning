@@ -1,5 +1,6 @@
 #!/bin/bash
-# Usage: connect.sh 
+# Usage: connect.sh
+# While the SSH Tunnel is open, you can login to clearml from your web browser at http://localhost:8080
 
 # Function to clean up background jobs
 cleanup() {
@@ -60,13 +61,11 @@ cat /tmp/output_pipe &
 BASE_MONITOR_PORT=$((49152 + $(python -c 'import random; print(random.randint(0,16384))')))
 
 # Establish tunnels with retries on monitor port conflicts, directing output to FIFO
-establish_tunnel $BASE_MONITOR_PORT 8080 8080 $LIGHTNING_CLOUD_SPACE_ID "$OPTIONS" /tmp/output_pipe
+establish_tunnel $BASE_MONITOR_PORT 8080 8080 $TARGET_LIGHTNING_ID "$OPTIONS" /tmp/output_pipe
 BASE_MONITOR_PORT=$(($BASE_MONITOR_PORT + 1))
-establish_tunnel $BASE_MONITOR_PORT 8008 8008 $LIGHTNING_CLOUD_SPACE_ID "$OPTIONS" /tmp/output_pipe
+establish_tunnel $BASE_MONITOR_PORT 8008 8008 $TARGET_LIGHTNING_ID "$OPTIONS" /tmp/output_pipe
 BASE_MONITOR_PORT=$(($BASE_MONITOR_PORT + 1))
-establish_tunnel $BASE_MONITOR_PORT 8081 8081 $LIGHTNING_CLOUD_SPACE_ID "$OPTIONS" /tmp/output_pipe
-BASE_MONITOR_PORT=$(($BASE_MONITOR_PORT + 1))
-establish_tunnel $BASE_MONITOR_PORT 4300 4300 $LIGHTNING_CLOUD_SPACE_ID "$OPTIONS" /tmp/output_pipe
+establish_tunnel $BASE_MONITOR_PORT 8081 8081 $TARGET_LIGHTNING_ID "$OPTIONS" /tmp/output_pipe
 
 # Wait a bit for tunnels to establish
 sleep 2
@@ -81,4 +80,3 @@ rm /tmp/output_pipe
 while true; do
     sleep 1
 done
-

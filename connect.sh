@@ -21,6 +21,8 @@ check_port() {
 
 # Trap Ctrl-C (SIGINT) and call the cleanup function
 trap cleanup SIGINT
+trap cleanup SIGKILL
+trap cleanup SIGSTOP
 
 OPTIONS="-o ServerAliveInterval=10 -o ServerAliveCountMax=60"
 
@@ -37,15 +39,19 @@ establish_tunnel() {
         echo "Starting tunnel from $forward_port to $target_port using monitor port $monitor_port..."
         while true; do
             # Try to establish the autossh tunnel and capture the output to check for errors
-            output=$(autossh -4 -M $monitor_port -N -L $forward_port:0.0.0.0:$target_port $options s_${cloud_space_id}@ssh.lightning.ai 2>&1)
-            echo "$output"
             # Check for specific message indicating the monitor port is in use
-            if [[ "$output" == *"remote port forwarding failed"* ]]; then
-                echo "Monitor port $monitor_port in use, trying next available port..."
-                ((monitor_port++))  # Increment monitor port to find a free one
+            if check_port $monitor_port; then
+                # output=$(autossh -4 -M $monitor_port -N -L $forward_port:0.0.0.0:$target_port $options s_${cloud_space_id}@ssh.lightning.ai 2>&1)
+                # echo "$output"
+                echo "Starting tunnel from $forward_port to $target_port using monitor port $monitor_port..."
+                autossh -4 -M $monitor_port -N -L $forward_port:0.0.0.0:$target_port $options s_${cloud_space_id}@ssh.lightning.ai &
+                autossh_pid=$!
+                wait $autossh_pid
+                # echo "Monitor port $monitor_port in use, trying next available port..."
+                # ((monitor_port++))  # Increment monitor port to find a free one
             else
-                echo "Tunnel established using monitor port $monitor_port for forwarding port $forward_port"
-                break
+                echo "Monitor port $monitor_port in use, trying next available port..."
+                ((monitor_port++))
             fi
         done
     ) > $output_pipe &
@@ -56,6 +62,11 @@ rm -f /tmp/output_pipe
 mkfifo /tmp/output_pipe
 # Open the FIFO for reading in the background and redirect its contents to stdout
 cat /tmp/output_pipe &
+
+ssh -T s_${CLEARML_LIGHTNING_CLOUD_SPACE_ID}@ssh.lightning.ai &
+
+# Kill initial SSH session
+pkill -f "ssh s_${CLEARML_LIGHTNING_CLOUD_SPACE_ID}@ssh.lightning.ai"
 
 # Set a random starting point within the dynamic port range for the monitor port
 BASE_MONITOR_PORT=$((49152 + $(python -c 'import random; print(random.randint(0,16384))')))

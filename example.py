@@ -2,7 +2,6 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
-import polars as pl
 
 from clearml import Task
 
@@ -14,16 +13,25 @@ def do_work(task, params):
 
     A = np.arange(N)
     B = np.random.rand(N)
-    plt.plot(A, B, color="xkcd:shocking pink")
-    plt.show()
+    fig, ax = plt.subplots(1,1)
+    ax.plot(A, B, color="xkcd:shocking pink")
+    # plt.show()
+    logger.report_matplotlib_figure(
+        "title",
+        "series",
+        fig,
+        report_interactive=False,
+        report_image=True,
+    )
     logger.report_text("Done")
 
 
 if __name__ == "__main__":
     start_time = time.time()
+    Task.force_requirements_env_freeze(force=True)
     task = Task.init(
         project_name="default",
-        task_name="parameterized-example-task",
+        task_name="test-task-w-image",
         task_type=Task.TaskTypes.data_processing,
     )
     print(f"Time elapsed for task init: {time.time() - start_time}")
@@ -37,3 +45,5 @@ if __name__ == "__main__":
 
     print(f"Time elapsed until work starts: {time.time() - start_time}")
     do_work(task, params)
+    print("Exit")
+    task.close()

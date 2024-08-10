@@ -19,6 +19,8 @@ Then run `cloudflared tunnel --url 0.0.0.0:8008` to set up a reverse proxy to th
 ## example task
 After going through the process of creating an access key/secret via the ClearML Web UI (port 8080, see settings), you'll populate `~/clearml.conf` with your settings:
 
+`pip install clearml==1.15.1`
+
 ```
 # ClearML SDK configuration file
 api {

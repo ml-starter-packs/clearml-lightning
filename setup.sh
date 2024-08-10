@@ -5,7 +5,6 @@ sudo mv /tmp/99-clearml.conf /etc/sysctl.d/99-clearml.conf
 sudo sysctl -w vm.max_map_count=262144
 sudo service docker restart
 
-
 mkdir -p ~/opt/clearml/data/elastic_7
 mkdir -p ~/opt/clearml/data/mongo_4/db
 mkdir -p ~/opt/clearml/data/mongo_4/configdb

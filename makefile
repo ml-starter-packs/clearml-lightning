@@ -50,3 +50,6 @@ dev-tools:
 
 restart-docker:
 	sudo service docker restart
+
+logs:
+	docker logs -n 100 -f clearml-apiserver

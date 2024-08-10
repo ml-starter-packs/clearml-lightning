@@ -19,6 +19,9 @@ down:
 re:
 	docker compose down; docker compose up -d
 
+chaos:
+	ps aux | grep ssh | awk '{ print $$2 }' | sudo xargs kill -9
+
 DOMAIN ?= 8000-$${LIGHTNING_CLOUDSPACE_HOST}
 
 replace:

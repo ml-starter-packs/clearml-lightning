@@ -94,6 +94,7 @@ def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineContr
         function_kwargs={
             "inputs": inputs,
         },
+        cache_executed_step=False,
         # function_kwargs={"inputs": "${task-0.output_value}"},  # individual strings work...
         # function_kwargs={  # this works for kwarg_sum_all
         #     f"input-{idx}": f"${{task-{idx}.output_value}}"

@@ -48,7 +48,7 @@ def set_default_pipe_params(
     pipe: PipelineController, project_name: str = "scale-tests"
 ) -> PipelineController:
     task_name = "test-function-steps"
-    execution_queue = "default"
+    execution_queue = "scale"
     num_tasks = 4  # not having an impact in UI
     pipe.add_parameter(name="num_tasks", default=num_tasks)
     pipe.add_parameter(name="execution_queue", default=execution_queue)

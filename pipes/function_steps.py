@@ -1,7 +1,9 @@
-from clearml.automation import PipelineController
+from typing import Any, Dict
 
 from clearml import Task
+from clearml.automation import PipelineController
 
+from clearml_pipe_utils import deserialize_dict
 
 def do_something(task_num):
     print(f"task_num: {task_num}")
@@ -23,35 +25,49 @@ def sum_all(inputs: str):
     return sum(values)
 
 
-if __name__ == "__main__":
+def demo_parameter_updates(pipe, key: str = "Args") -> PipelineController:
+    print("______DEFAULT PIPELINE PARAMS_____")
+    default_params = pipe.get_parameters()
+    print(default_params)  # notice this ignores UI-based updates
+    print("______DYNAMIC PARAMS_____")
+    dynamic_params = pipe._task.get_parameters_as_dict().get(key)
+    print(dynamic_params)
 
+
+def get_pipeline_params(
+    pipe: PipelineController, key: str = "Args"
+) -> PipelineController:
+    # the following returns pipe._pipeline_args -> not updated.
+    default_params = pipe.get_parameters()
+    dynamic_params = pipe._task.get_parameters_as_dict().get(key, default_params)
+    return deserialize_dict(dynamic_params)
+
+
+def set_default_pipe_params(
+    pipe: PipelineController, project_name: str = "scale-tests"
+) -> PipelineController:
     task_name = "test-function-steps"
-    project_name = "scale-tests"
     execution_queue = "default"
     num_tasks = 4  # not having an impact in UI
+    pipe.add_parameter(name="num_tasks", default=num_tasks)
+    pipe.add_parameter(name="execution_queue", default=execution_queue)
+    pipe.add_parameter(name="project", default=project_name)
+    pipe.add_parameter(name="task_name", default=task_name)
 
-    pipe = PipelineController(
-        name=f"{project_name}-pipeline",
-        project=project_name,
-        version="0.0.1",
-        add_pipeline_tags=False,
-    )
+    # this works as far as dynamic pipelines go, but not via UI.
+    # params = pipe.connect_configuration(
+    #     {
+    #         "num_tasks": num_tasks,
+    #         "execution_queue": execution_queue,
+    #         "project": project_name,
+    #         "task_name": task_name,
+    #     }
+    # )
 
-    # doesn't seem to lead to interactive node creation: TODO: apply known fix.
-    # pipe.add_parameter(name="num_tasks", default=num_tasks)
-    # pipe.add_parameter(name="execution_queue", default=execution_queue)
-    # pipe.add_parameter(name="project", default=project_name)
-    # pipe.add_parameter(name="task_name", default=task_name)
-    # params = pipe.get_parameters()
+    return pipe
 
-    params = pipe.connect_configuration(
-        {
-            "num_tasks": num_tasks,
-            "execution_queue": execution_queue,
-            "project": project_name,
-            "task_name": task_name,
-        }
-    )
+
+def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineController:
 
     for idx in range(params["num_tasks"]):
         pipe.add_function_step(
@@ -87,6 +103,24 @@ if __name__ == "__main__":
         execution_queue=params["execution_queue"],
     )
 
-    # pipe.start()
-    pipe.start_locally()
+    return pipe
+
+
+if __name__ == "__main__":
+
+    project_name = "scale-tests"
+    pipe = PipelineController(
+        name=f"{project_name}-pipeline",
+        project=project_name,
+        version="0.0.1",
+        add_pipeline_tags=False,
+    )
+
+    pipe = set_default_pipe_params(pipe)
+    demo_parameter_updates(pipe, key="Args")
+    params = get_pipeline_params(pipe, key="Args")
+    pipe = add_steps(pipe, params)
+
+    pipe.start(queue="default")
+    # pipe.start_locally()
     print("Done.")

@@ -20,7 +20,7 @@ restart-elastic:
 	docker compose stop elasticsearch; docker compose up -d --no-deps --force-recreate elasticsearch
 
 chaos:
-	ps aux | grep ssh | awk '{ print $$2 }' | sudo xargs kill -9
+	ps aux | grep "sshd" | grep -v grep | awk '{ print $$2 }' | sudo xargs kill -9
 
 DOMAIN ?= 8000-$${LIGHTNING_CLOUDSPACE_HOST}
 

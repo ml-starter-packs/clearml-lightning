@@ -63,10 +63,10 @@ mkfifo /tmp/output_pipe
 # Open the FIFO for reading in the background and redirect its contents to stdout
 cat /tmp/output_pipe &
 
-ssh -T s_${CLEARML_LIGHTNING_CLOUD_SPACE_ID}@ssh.lightning.ai &
+ssh -T s_${TARGET_LIGHTNING_ID}@ssh.lightning.ai &
 
 # Kill initial SSH session
-pkill -f "ssh s_${CLEARML_LIGHTNING_CLOUD_SPACE_ID}@ssh.lightning.ai"
+pkill -f "ssh s_${TARGET_LIGHTNING_ID}@ssh.lightning.ai"
 
 # Set a random starting point within the dynamic port range for the monitor port
 BASE_MONITOR_PORT=$((49152 + $(python -c 'import random; print(random.randint(0,16384))')))

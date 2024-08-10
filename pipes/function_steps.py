@@ -54,6 +54,7 @@ def set_default_pipe_params(
     pipe.add_parameter(name="execution_queue", default=execution_queue)
     pipe.add_parameter(name="function_step_project", default=project_name)
     pipe.add_parameter(name="task_name", default=task_name)
+    pipe.add_parameter(name="cache_step", default=False)
 
     # this works as far as dynamic pipelines go, but not via UI.
     # params = pipe.connect_configuration(
@@ -78,7 +79,7 @@ def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineContr
             function_kwargs={"task_num": idx},
             function_return=["output_value"],
             execution_queue=params["execution_queue"],
-            cache_executed_step=True,
+            cache_executed_step=params.get("cache_step", False),
         )
 
     inputs = (

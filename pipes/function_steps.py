@@ -5,6 +5,7 @@ from clearml.automation import PipelineController
 
 from clearml_pipe_utils import deserialize_dict
 
+
 def do_something(task_num):
     print(f"task_num: {task_num}")
     return task_num
@@ -51,7 +52,7 @@ def set_default_pipe_params(
     num_tasks = 4  # not having an impact in UI
     pipe.add_parameter(name="num_tasks", default=num_tasks)
     pipe.add_parameter(name="execution_queue", default=execution_queue)
-    pipe.add_parameter(name="project", default=project_name)
+    pipe.add_parameter(name="function_step_project", default=project_name)
     pipe.add_parameter(name="task_name", default=task_name)
 
     # this works as far as dynamic pipelines go, but not via UI.
@@ -72,7 +73,7 @@ def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineContr
     for idx in range(params["num_tasks"]):
         pipe.add_function_step(
             name=f"task-{idx}",
-            project_name=params["project"],
+            project_name=params["function_step_project"],
             function=do_something,
             function_kwargs={"task_num": idx},
             function_return=["output_value"],
@@ -89,7 +90,7 @@ def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineContr
     pipe.add_function_step(
         name="collection",
         function=sum_all,
-        project_name=params["project"],
+        project_name=params["function_step_project"],
         function_kwargs={
             "inputs": inputs,
         },
@@ -108,12 +109,11 @@ def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineContr
 
 if __name__ == "__main__":
 
-    project_name = "scale-tests"
     pipe = PipelineController(
-        name=f"{project_name}-pipeline",
-        project=project_name,
+        name="dynamic-pipeline",
+        project="scale-tests",
         version="0.0.1",
-        add_pipeline_tags=False,
+        add_pipeline_tags=True,
     )
 
     pipe = set_default_pipe_params(pipe)

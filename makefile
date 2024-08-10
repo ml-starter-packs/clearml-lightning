@@ -42,3 +42,11 @@ fresh: down
 
 status:
 	@docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"
+
+dev-tools:
+	sudo apt update && sudo apt upgrade -y \
+		&& sudo apt install -yqq \
+		tmux htop lsof strace
+
+restart-docker:
+	sudo service docker restart

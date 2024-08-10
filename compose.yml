@@ -7,9 +7,9 @@ services:
     image: allegroai/clearml:1.15.1
     restart: unless-stopped
     volumes:
-    - ~/opt/clearml/logs:/var/log/clearml
-    - ~/opt/clearml/config:/opt/clearml/config
-    - ~/opt/clearml/data/fileserver:/mnt/fileserver
+      - ~/opt/clearml/logs:/var/log/clearml
+      - ~/opt/clearml/config:/opt/clearml/config
+      - ~/opt/clearml/data/fileserver:/mnt/fileserver
     depends_on:
       - redis
       - mongo
@@ -47,7 +47,7 @@ services:
     container_name: clearml-elastic
     environment:
       ES_JAVA_OPTS: "-Xms2g -Xmx2g -Dlog4j2.formatMsgNoLookups=true"
-      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      # ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       bootstrap.memory_lock: "true"
       cluster.name: clearml
       cluster.routing.allocation.node_initial_primaries_recoveries: "500"
@@ -86,9 +86,9 @@ services:
       CLEARML__fileserver__auth__enabled: "false"
     restart: unless-stopped
     volumes:
-    - ~/opt/clearml/logs:/var/log/clearml
-    - ~/opt/clearml/data/fileserver:/mnt/fileserver
-    - ~/opt/clearml/config:/opt/clearml/config
+      - ~/opt/clearml/logs:/var/log/clearml
+      - ~/opt/clearml/data/fileserver:/mnt/fileserver
+      - ~/opt/clearml/config:/opt/clearml/config
     ports:
     - "8081:8081"
 

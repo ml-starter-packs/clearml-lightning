@@ -26,3 +26,6 @@ DOMAIN ?= 8000-$${LIGHTNING_CLOUDSPACE_HOST}
 
 replace:
 	sed -i "s/mydomain\.com/$(DOMAIN)/g" nginx.conf
+
+fresh: down
+	sudo rm -rf ~/opt

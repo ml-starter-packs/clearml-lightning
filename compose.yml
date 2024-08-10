@@ -46,6 +46,8 @@ services:
       - backend
     container_name: clearml-elastic
     environment:
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g -Dlog4j2.formatMsgNoLookups=true"
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       bootstrap.memory_lock: "true"
       cluster.name: clearml
       cluster.routing.allocation.node_initial_primaries_recoveries: "500"
@@ -56,8 +58,8 @@ services:
       http.compression_level: "7"
       node.name: clearml
       reindex.remote.whitelist: "'*.*'"
+      xpack.monitoring.enabled: "false"
       xpack.security.enabled: "false"
-      ES_JAVA_OPTS: "-Xms4g -Xmx4g"
     ulimits:
       memlock:
         soft: -1

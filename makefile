@@ -1,3 +1,12 @@
+up:
+	docker compose up -d
+
+down:
+	docker compose down
+
+re:
+	docker compose down; docker compose up -d
+
 restart-api:
 	docker compose stop apiserver; docker compose up -d --no-deps --force-recreate apiserver
 
@@ -9,15 +18,6 @@ restart-file:
 
 restart-elastic:
 	docker compose stop elasticsearch; docker compose up -d --no-deps --force-recreate elasticsearch
-
-up:
-	docker compose up -d
-
-down:
-	docker compose down
-
-re:
-	docker compose down; docker compose up -d
 
 chaos:
 	ps aux | grep ssh | awk '{ print $$2 }' | sudo xargs kill -9

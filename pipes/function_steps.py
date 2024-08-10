@@ -8,18 +8,6 @@ def do_something(task_num):
     return task_num
 
 
-for idx in range(params["num_tasks"]):
-    pipe.add_function_step(
-        name=f"task-{idx}",
-        project_name=params["project"],
-        function=do_something,
-        function_kwargs={"task_num": idx},
-        function_return=["output_value"],
-        execution_queue=params["execution_queue"],
-        cache_executed_step=True,
-    )
-
-
 def sum_all(inputs: str):
     print("SUMMING")
     print(inputs)
@@ -64,6 +52,17 @@ if __name__ == "__main__":
             "task_name": task_name,
         }
     )
+
+    for idx in range(params["num_tasks"]):
+        pipe.add_function_step(
+            name=f"task-{idx}",
+            project_name=params["project"],
+            function=do_something,
+            function_kwargs={"task_num": idx},
+            function_return=["output_value"],
+            execution_queue=params["execution_queue"],
+            cache_executed_step=True,
+        )
 
     inputs = (
         "("

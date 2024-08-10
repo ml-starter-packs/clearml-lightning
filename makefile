@@ -39,3 +39,6 @@ fresh: down
 	sudo mkdir -p /opt/clearml/data/fileserver
 	sudo chown -R $$(id -u):$$(id -g) /opt/clearml/
 	@echo "\nCleaned everything up!"
+
+status:
+	@docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"

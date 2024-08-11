@@ -3,7 +3,7 @@ from typing import Any, Dict
 from clearml import Task
 from clearml.automation import PipelineController
 
-from clearml_pipe_utils import deserialize_dict
+from clearml_pipe_utils import deserialize_dict  # noqa
 
 
 def do_something(task_num):
@@ -49,7 +49,7 @@ def set_default_pipe_params(
 ) -> PipelineController:
     task_name = "test-function-steps"
     execution_queue = "scale"
-    num_tasks = 4  # not having an impact in UI
+    num_tasks = 10  # not having an impact in UI
     pipe.add_parameter(name="num_tasks", default=num_tasks)
     pipe.add_parameter(name="execution_queue", default=execution_queue)
     pipe.add_parameter(name="function_step_project", default=project_name)
@@ -80,6 +80,7 @@ def add_steps(pipe: PipelineController, params: Dict[str, Any]) -> PipelineContr
             function_return=["output_value"],
             execution_queue=params["execution_queue"],
             cache_executed_step=params.get("cache_step", False),
+            packages=["clearml[s3]==1.15.1"],
         )
 
     inputs = (

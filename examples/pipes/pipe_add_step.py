@@ -7,7 +7,12 @@ from clearml import PipelineController
 
 
 def init_params(pipe: PipelineController) -> PipelineController:
-    pipe.add_parameter(name="num_copies", default=1, description="number of copies of the task", param_type="int")
+    pipe.add_parameter(
+        name="num_copies",
+        default=1,
+        description="number of copies of the task",
+        param_type="int",
+    )
 
     # type hints such as 'int' or 'str' seem to work, but "list" ones do not.
     pipe.add_parameter(
@@ -19,7 +24,9 @@ def init_params(pipe: PipelineController) -> PipelineController:
     return pipe
 
 
-def add_steps(pipe: PipelineController, params: Dict[str, str], default_params: Dict[str, Any]) -> PipelineController:
+def add_steps(
+    pipe: PipelineController, params: Dict[str, str], default_params: Dict[str, Any]
+) -> PipelineController:
 
     # must handle both typed-defaults and strings
     # also entirely up to you to handle user error here...
@@ -44,7 +51,9 @@ def add_steps(pipe: PipelineController, params: Dict[str, str], default_params: 
                 "ShapeParameters/N": 200 + i,
             },
             configuration_overrides={
-                "feature_list": json.dumps(feature_list),  # must be string (to deserialize later)
+                "feature_list": json.dumps(
+                    feature_list
+                ),  # must be string (to deserialize later)
                 "feature_dict": {"feature_10": False},  # this is now the new value.
             },
             execution_queue="default",
@@ -59,6 +68,9 @@ if __name__ == "__main__":
         version=None,
         add_pipeline_tags=True,
         always_create_from_code=True,
+    )
+    pipe._task.set_repo(
+        repo="https://github.com/ml-starter-packs/clearml-lightning.git"
     )
 
     # TODO: get these to be dynamic?
@@ -90,5 +102,4 @@ if __name__ == "__main__":
 
     logger = pipe.get_logger()
     logger.report_scalar("title", "series", value=1, iteration=0)
-    pipe.start(queue="default")
-
+    pipe.start(queue="services")

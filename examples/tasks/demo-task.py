@@ -76,11 +76,15 @@ def init_task_params(task: Task) -> Task:
     # this will be of type 'list'
     # Note: despite this being a list, it's reported as a dictionary in the UI
     _list_conf = ["my", "list", "of", "features"]
-    list_conf = task.connect_configuration(configuration=_list_conf, name="feature_list")
+    list_conf = task.connect_configuration(
+        configuration=_list_conf, name="feature_list"
+    )
 
     # this will be of type 'clearml.utilities.proxy_object.ProxyDictPostWrite'
     _dict_config = {f"feature_{k:02d}": (np.random.rand() > 0.5) for k in range(10)}
-    dict_conf = task.connect_configuration(configuration=_dict_config, name="feature_dict")
+    dict_conf = task.connect_configuration(
+        configuration=_dict_config, name="feature_dict"
+    )
     print(f"List Config: {list_conf}, type: {type(list_conf)}")
     print(f"Dict Config: {dict_conf}, type: {type(dict_conf)}")
     return task, params, list_conf, dict_conf
@@ -88,13 +92,14 @@ def init_task_params(task: Task) -> Task:
 
 if __name__ == "__main__":
     start_time = time.time()
-    Task.force_requirements_env_freeze(force=True)
+    # Task.force_requirements_env_freeze(force=True, requirements_file="requirements.txt")
     task = Task.init(
         project_name="dev/tests",
         task_name="demo-task",
         task_type=Task.TaskTypes.data_processing,
         auto_connect_arg_parser=True,
     )
+    task.set_repo(repo="https://github.com/ml-starter-packs/clearml-lightning.git")
     print(f"Time elapsed for task init: {time.time() - start_time}")
     task, params, list_conf, dict_conf = init_task_params(task)
     print(f"Time elapsed until parameter connection: {time.time() - start_time}")

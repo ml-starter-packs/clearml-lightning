@@ -11,3 +11,5 @@
 - [X] .env file
 - [X] Why does agent-services only run one container at a time?
 - [ ] multiple users documented
+
+The default secret for the system's apiserver component can be overridden by setting the following environment variable: CLEARML__SECURE__CREDENTIALS__APISERVER__USER_SECRET="my-new-secret"

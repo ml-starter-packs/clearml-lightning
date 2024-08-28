@@ -4,8 +4,12 @@ import json
 
 from clearml import PipelineController
 
-source_task = PipelineController.get(pipeline_project="dev/tests", pipeline_name="dynamic-test #21")
+# this should grab the most recently executed one:
+source_task = PipelineController.get(
+    pipeline_project="dev/tests", pipeline_name="dynamic-test"
+)
 pipe = PipelineController(name="meta-pipe", project="dev/tests", add_pipeline_tags=True)
+pipe._task.set_repo(repo="https://github.com/ml-starter-packs/clearml-lightning.git")
 
 pipe.add_parameter(
     name="num_copies",
@@ -36,6 +40,7 @@ for idx in range(len(num_copies)):
             "Args/num_copies": nc,
             "Args/feature_list": fl,
         },
-        execution_queue="default",
+        execution_queue="services",
     )
-pipe.start(queue="default")
+
+pipe.start(queue="services")

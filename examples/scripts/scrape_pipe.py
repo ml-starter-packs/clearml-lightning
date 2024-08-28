@@ -1,4 +1,5 @@
 """Script that clones a pipeline and runs it for a set of inputs."""
+
 from clearml import PipelineController, Task
 
 list_of_experiments = [
@@ -10,8 +11,7 @@ list_of_experiments = [
 list_num_copies = [1, 2, 3]
 
 source_task = PipelineController.get(
-    pipeline_project="dev/tests",
-    pipeline_name="dynamic-test #1"
+    pipeline_project="dev/tests", pipeline_name="dynamic-test #1"
 )
 print(f"Source task: {source_task.id}")
 

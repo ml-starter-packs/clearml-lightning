@@ -23,7 +23,7 @@ The first deployment pattern we cover will begin with `localhost` as the configu
     make keys >> .env
     ```
 
-3. Optionally, if using a private repo for your ClearML workloads, populate `.env` with your git credential tokens.
+3. Optionally, if using a private repo for your ClearML workloads, populate `.env` with your git credential tokens. Whatever `git remote -v` shows you is what ClearML will use when it attempts to clone. If you cloned a public repo but used `git@github.com...`, you can modify the configuration in the task definition (when in Draft state), change your remote, or use an app password anyway.
 
 4. Start ClearML with `make up`, query the docker container statuses with `make status`.
 
@@ -42,6 +42,21 @@ The first deployment pattern we cover will begin with `localhost` as the configu
 7. You are now ready to run examples: `make examples`
 
 Note: if you're running `make fresh` to test out brand-new deployments, make sure to clear your browser cookies (or start a new private browser) when connecting to ClearML.
+
+
+## user creation
+Let's tear down our initial instance and create a new one with basic user authentication.
+
+TODO....
+
+## agents
+Fill in `agents/.env` with 
+```bash
+CLEARML_API_ACCESS_KEY
+CLEARML_API_SECRET_KEY
+```
+set to the contents of `CLEARML_AGENT_ACCESS_KEY`/`CLEARML_AGENT_ACCESS_SECRET` in `.env` at the root of this repository, or with App credentials associated to user (ideally one created for the purpose of remote workers).
+
 
 ## environment
 `.env` contains the (bare minimum) environment variables that the docker-compose stack will be relying on.

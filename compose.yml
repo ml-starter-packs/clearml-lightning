@@ -168,8 +168,9 @@ services:
       - .env
 
   agent-services:
-    networks:
-      - backend
+    network_mode: host
+    # networks:
+    #   - backend
     container_name: clearml-agent-services
     image: allegroai/clearml-agent-services:latest
     deploy:
@@ -177,18 +178,23 @@ services:
         condition: on-failure
     privileged: true
     environment:
-      CLEARML_HOST_IP: ${CLEARML_HOST_IP}
-      CLEARML_WEB_HOST: ${CLEARML_WEB_HOST:-}
-      CLEARML_API_HOST: http://apiserver:8008
-      CLEARML_FILES_HOST: ${CLEARML_FILES_HOST:-}
+      # CLEARML_HOST_IP: ${CLEARML_HOST_IP}
+      # CLEARML_API_HOST: http://apiserver:8008
+      # CLEARML_FILES_HOST: http://fileserver:8081
+      CLEARML_HOST_IP: 0.0.0.0
+      # CLEARML_API_HOST: http://0.0.0.0:8008
+      # CLEARML_FILES_HOST: http://0.0.0.0:8081
+      # CLEARML_WEB_HOST: http://0.0.0.0:8080
       CLEARML_API_ACCESS_KEY: ${CLEARML_AGENT_ACCESS_KEY:-$CLEARML_API_ACCESS_KEY}
       CLEARML_API_SECRET_KEY: ${CLEARML_AGENT_SECRET_KEY:-$CLEARML_API_SECRET_KEY}
       CLEARML_AGENT_GIT_USER: ${CLEARML_AGENT_GIT_USER}
       CLEARML_AGENT_GIT_PASS: ${CLEARML_AGENT_GIT_PASS}
-      CLEARML_AGENT_UPDATE_VERSION: ${CLEARML_AGENT_UPDATE_VERSION:->=0.18.1}
+      CLEARML_AGENT_UPDATE_VERSION: ${CLEARML_AGENT_UPDATE_VERSION:->=1.8.1}
       CLEARML_AGENT_DEFAULT_BASE_DOCKER: "python:3.10.10"
-      CLEARML_WORKER_BASIC_KEY: ${WORKER_BASIC_KEY:-}
       CLEARML_WORKER_ID: "clearml-services"
+      CLEARML_AGENT_DAEMON_OPTIONS: "${CLEARML_AGENT_DAEMON_OPTIONS:---services-mode 5 --create-queue}"
+      CLEARML_AGENT_QUEUES: ${CLEARML_AGENT_QUEUES:-services}
+      CLEARML_AGENT_EXTRA_DOCKER_ARGS: "--network=host"
       # AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       # AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
       CLEARML_AGENT_DOCKER_HOST_MOUNT: "/teamspace/studios/this_studio/opt/clearml/agent:/root/.clearml"
@@ -196,11 +202,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/opt/clearml/agent:/root/.clearml
-      - ~/opt/clearml/agent/clearml.conf:/root/clearml.conf
+      # - ~/opt/clearml/agent/clearml.conf:/root/clearml.conf
     depends_on:
       - apiserver
     entrypoint: >
-      bash -c "curl --retry 10 --retry-delay 10 --retry-connrefused 'http://apiserver:8008/debug.ping' && /usr/agent/entrypoint.sh"
+      bash -c "curl --retry 10 --retry-delay 2 --retry-connrefused 'http://0.0.0.0:8008/debug.ping' && /usr/agent/entrypoint.sh"
 
 networks:
   backend:

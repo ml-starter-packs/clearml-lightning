@@ -20,6 +20,9 @@ restart-file:
 restart-elastic:
 	docker compose stop elasticsearch; docker compose up -d --no-deps --force-recreate elasticsearch
 
+restart-services:
+	docker compose stop agent-services; docker compose up -d --no-deps --force-recreate agent-services
+
 chaos:
 	ps aux | grep "sshd" | grep -v grep | awk '{ print $$2 }' | sudo xargs kill -9
 

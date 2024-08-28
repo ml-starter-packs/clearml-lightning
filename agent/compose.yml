@@ -1,0 +1,31 @@
+x-worker_template: &worker_defaults
+  image: worker
+  cpu_count: 1
+  deploy:
+    restart_policy:
+      condition: unless-stopped
+  privileged: false
+  env_file: .env
+  network_mode: host
+  # volumes:
+  #   - ./entrypoint.sh:/home/agent/entrypoint.sh
+  entrypoint: >
+    bash -c "curl --retry 10 --retry-delay 2 --retry-connrefused 'http://0.0.0.0:8008/debug.ping' && /home/agent/entrypoint.sh"
+
+services:
+  worker_001:
+    <<: *worker_defaults
+    container_name: worker001
+    environment:
+      CLEARML_WORKER_ID: "A001-onprem"
+      CLEARML_WORKER_NAME: "A001-onprem"
+      # CLEARML__CLEARML__AGENT__PACKAGE_MANAGER__PIP_VERSION: "24.1"
+      # CLEARML_AGENT_SKIP_PYTHON_ENV_INSTALL: 1
+      # CLEARML_AGENT_SKIP_PIP_VENV_INSTALL="/home/user/venv/bin/python"
+
+  worker_002:
+    <<: *worker_defaults
+    container_name: worker002
+    environment:
+      CLEARML_WORKER_ID: "A002-onprem"
+      CLEARML_WORKER_NAME: "A002-onprem"

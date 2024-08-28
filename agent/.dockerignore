@@ -1,0 +1,6 @@
+.env
+.env.template
+makefile
+clearml.conf
+generate-compose.sh
+compose.yml

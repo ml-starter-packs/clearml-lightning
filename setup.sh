@@ -13,4 +13,4 @@ mkdir -p ~/opt/clearml/logs
 mkdir -p ~/opt/clearml/config
 mkdir -p ~/opt/clearml/data/fileserver
 
-mkdir -p ~/usr/share/elasticsearch/logs
+# mkdir -p ~/usr/share/elasticsearch/logs

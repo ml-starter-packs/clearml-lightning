@@ -1,11 +1,12 @@
-up:
+up: .env
 	docker compose up -d
 
 down:
 	docker compose down
 
-re:
+re: status
 	docker compose down; docker compose up -d
+	sleep 3 && make status
 
 restart-api:
 	docker compose stop apiserver; docker compose up -d --no-deps --force-recreate apiserver
@@ -53,3 +54,19 @@ restart-docker:
 
 logs:
 	docker logs -n 100 -f clearml-apiserver
+
+host:
+	@echo "Run the following:"
+	@echo "\n\t TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} connect\n"
+
+example:
+	cd examples/tasks && python demo-task.py
+	cd examples/pipes && python pipe_add_step.py
+
+keys:
+	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")'
+
+.env: .env.template
+	@echo "Creating \`.env\` and populating secrets"
+	@cp .env.template .env
+	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")' >> .env

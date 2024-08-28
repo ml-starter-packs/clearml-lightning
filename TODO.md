@@ -1,5 +1,11 @@
 
-- [ ] document how to get the initial API key working
-- [ ] port examples 
-- [ ] switch back to ~/opt
+- [ ] document how to get the initial API key working (services)
+- [X] port examples
+- [ ] validate examples
+- [X] switch back to ~/opt
 - [ ] try upgrading clearml versions
+- [ ] elastic logs not working with `~/usr` due to permissions. (this fails: `~/usr/share/elasticsearch/logs:/usr/share/elasticsearch/logs`)
+- [ ] agent setup (automatic)
+- [ ] authentication
+- [ ] docs for examples (reflect new script names)
+- [ ] .env file

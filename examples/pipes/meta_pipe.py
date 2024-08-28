@@ -13,11 +13,11 @@ pipe._task.set_repo(repo="https://github.com/ml-starter-packs/clearml-lightning.
 
 pipe.add_parameter(
     name="num_copies",
-    default=[1],
+    default=[5, 6],
 )
 pipe.add_parameter(
     name="features",
-    default=[["a", "b"]],
+    default=[["a", "b"], ["c", "d", "e"]],
 )
 
 default_params = pipe.get_parameters()

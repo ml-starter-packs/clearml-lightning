@@ -50,13 +50,23 @@ Let's tear down our initial instance and create a new one with basic user authen
 TODO....
 
 ## agents
-Fill in `agents/.env` with 
+TODO: automate this entirely.
+
+Fill in `agents/.env` (`cd agents && make .env`, then edit it) with 
 ```bash
 CLEARML_API_ACCESS_KEY
 CLEARML_API_SECRET_KEY
 ```
 set to the contents of `CLEARML_AGENT_ACCESS_KEY`/`CLEARML_AGENT_ACCESS_SECRET` in `.env` at the root of this repository, or with App credentials associated to user (ideally one created for the purpose of remote workers).
 
+Then:
+```bash
+cd agents/
+make up
+```
+
+## security:
+TODO: set non-default credentials for `secure.conf`. can use env vars to override them, and a bash script to populate.
 
 ## environment
 `.env` contains the (bare minimum) environment variables that the docker-compose stack will be relying on.

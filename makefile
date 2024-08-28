@@ -29,15 +29,15 @@ replace:
 
 fresh: down
 	sudo rm -rf ~/opt ~/usr /opt/clearml/
-	sudo mkdir -p /opt/clearml/
-	sudo mkdir -p /opt/clearml/data/elastic_7
-	sudo mkdir -p /opt/clearml/data/mongo_4/db
-	sudo mkdir -p /opt/clearml/data/mongo_4/configdb
-	sudo mkdir -p /opt/clearml/data/redis
-	sudo mkdir -p /opt/clearml/logs
-	sudo mkdir -p /opt/clearml/config
-	sudo mkdir -p /opt/clearml/data/fileserver
-	sudo chown -R $$(id -u):$$(id -g) /opt/clearml/
+	sudo mkdir -p ~/opt/clearml/
+	sudo mkdir -p ~/opt/clearml/data/elastic_7
+	sudo mkdir -p ~/opt/clearml/data/mongo_4/db
+	sudo mkdir -p ~/opt/clearml/data/mongo_4/configdb
+	sudo mkdir -p ~/opt/clearml/data/redis
+	sudo mkdir -p ~/opt/clearml/logs
+	sudo mkdir -p ~/opt/clearml/config
+	sudo mkdir -p ~/opt/clearml/data/fileserver
+	sudo chown -R $$(id -u):$$(id -g) ~/opt/clearml/
 	@echo "\nCleaned everything up!"
 
 status:

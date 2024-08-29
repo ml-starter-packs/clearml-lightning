@@ -5,7 +5,7 @@ ENV LANGUAGE=en_US.UTF-8
 ENV PYTHONIOENCODING=UTF-8
 
 # Create a user
-RUN useradd -u 1000 -ms /bin/bash user
+RUN useradd -u 1000 -ms /bin/bash agent
 
 # Install dependencies
 RUN apt-get update \
@@ -21,7 +21,7 @@ RUN pip install pip==24.0 virtualenv
 WORKDIR /home/agent
 
 # Switch to the user
-USER user
+USER agent
 
 RUN pip install pip==24.2
 
@@ -45,10 +45,10 @@ USER root
 # Copy entrypoint.sh, set permissions, and change ownership
 ADD entrypoint.sh /home/agent/entrypoint.sh
 RUN chmod +x /home/agent/entrypoint.sh
-RUN chown user:user /home/agent/entrypoint.sh
+RUN chown agent:agent /home/agent/entrypoint.sh
 
-# Switch back to the user
-USER user
+# Switch back to the agent user
+USER agent
 
 # Set git config
 RUN git config --global advice.detachedHead false

@@ -1,4 +1,4 @@
-up: .env
+up:
 	docker compose up -d
 
 down:
@@ -44,6 +44,10 @@ fresh: down
 	sudo chown -R $$(id -u):$$(id -g) ~/opt/clearml/
 	@echo "\nCleaned everything up!"
 
+install: .env
+	./setup.sh
+	cp config.yml on_start.sh on_stop.sh ~/.lightning_studio/
+
 status:
 	@docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"
 
@@ -61,10 +65,6 @@ logs:
 host:
 	@echo "Run the following:"
 	@echo "\n\t TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} connect\n"
-
-example:
-	cd examples/tasks && python demo-task.py
-	cd examples/pipes && python pipe_add_step.py
 
 keys:
 	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")'

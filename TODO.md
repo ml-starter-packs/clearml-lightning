@@ -15,5 +15,6 @@
 - [X] venv mode allowing for package installs
 - [X] services mode allowing for package installs
 - [ ] test a queue with venv disabled (`stable`)
+- [ ] test on/off robustness
 
 The default secret for the system's apiserver component can be overridden by setting the following environment variable: CLEARML__SECURE__CREDENTIALS__APISERVER__USER_SECRET="my-new-secret"

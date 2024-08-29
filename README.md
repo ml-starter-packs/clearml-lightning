@@ -33,7 +33,7 @@ The first deployment pattern we cover will begin with `localhost` as the configu
 
 4. Start ClearML with `make up`, query the docker container statuses with `make status`.
 
-5. To connect: Download `connect.sh` and move it to `~/.local/bin/connect` on your system (ensuring `chmod +x` has been run on it and that `~/.local/bin` is in your `PATH`) on any machines that need to connect to ClearML (including the one that is running your web browser)
+5. To connect: Download `connect.sh` and move it to `~/.local/bin/connect` on your system (ensuring `chmod +x` has been run on it and that `~/.local/bin` is in your `PATH`), and on any machines that need to connect to ClearML (including the one that is running your web browser).
 
     The following will print a connection command for you:
     ```bash

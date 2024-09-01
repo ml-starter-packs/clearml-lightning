@@ -51,6 +51,9 @@ install: .env
 status:
 	@docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"
 
+watch:
+	@watch 'docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"'
+
 dev-tools:
 	sudo apt update && sudo apt upgrade -y \
 		&& sudo apt install -yqq \
@@ -66,6 +69,9 @@ host:
 	@echo "Run the following:"
 	@echo "\n\t TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} connect\n"
 
+	@echo "\n Alternatively, from another (agent) studio:"
+	@echo "\n\t TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} ./connect.sh\n"
+
 keys:
 	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")'
 
@@ -73,3 +79,6 @@ keys:
 	@echo "Creating \`.env\` and populating secrets"
 	@cp .env.template .env
 	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")' >> .env
+
+agent.tar.gz:
+	tar -cvzf agent.tar.gz agent/

@@ -202,6 +202,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/opt/clearml/agent:/root/.clearml
+      - .services.env:/usr/agent/.services.env:ro
       # - ~/opt/clearml/agent/clearml.conf:/root/clearml.conf
     depends_on:
       - apiserver

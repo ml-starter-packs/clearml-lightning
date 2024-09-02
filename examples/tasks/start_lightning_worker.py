@@ -6,15 +6,6 @@ import requests
 from lightning_sdk import Studio, Machine, JobsPlugin, Job
 from clearml import Task, TaskTypes
 
-LIGHTNING_ENV = f"""
--e LIGHTNING_USER_ID={os.environ.get("LIGHTNING_USER_ID")} \
--e LIGHTNING_API_KEY={os.environ.get("LIGHTNING_API_KEY")} \
--e LIGHTNING_USERNAME={os.environ.get("LIGHTNING_USERNAME")} \
--e LIGHTNING_TEAMSPACE={os.environ.get("LIGHTNING_TEAMSPACE")} \
--e LIGHTNING_CLUSTER_ID={os.environ.get("LIGHTNING_CLUSTER_ID")} \
--e LIGHTNING_ORG={os.environ.get("LIGHTNING_ORG")}
-"""
-
 task = Task.init(
     project_name="lightning-services",
     task_name="start-lightning-worker",
@@ -24,7 +15,7 @@ task = Task.init(
 task.set_repo(repo="https://github.com/ml-starter-packs/clearml-lightning.git")
 task.set_base_docker(
     docker_image="python:3.10.10",
-    docker_arguments=LIGHTNING_ENV,
+    docker_arguments="--env-file=/usr/agent/.services.env",
 )
 params = task.connect(
     {

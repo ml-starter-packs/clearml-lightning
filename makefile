@@ -82,3 +82,7 @@ keys:
 
 agent.tar.gz:
 	tar -cvzf agent.tar.gz agent/
+
+
+.services.env:
+	./lightning_env.sh > .services.env

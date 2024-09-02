@@ -22,12 +22,18 @@ params = task.connect(
         "machine": "CPU_SMALL",
         "containers_per_machine": 1,
         "job_name": "test-launch-remote",
+        "clearml_lightning_id": "01j4yhm4nz7bq29tcbcpqkpzp9",
     }
 )
-task.execute_remotely(queue_name="services")
+task.execute_remotely(queue_name=None)
 
 machine_type = params.get("machine")
 job_name = params.get("job_name", "default-job-name")
+clearml_lightning_id = params.get("clearml_lightning_id")
+
+if not clearml_lightning_id:
+    print("ERROR: no clearml_lightning_id set.")
+    task.close()
 
 machine = getattr(Machine, machine_type)
 
@@ -41,7 +47,8 @@ s = Studio("worker-clearml-opensource")
 # jobs_plugin = s.installed_plugins["jobs"]
 jobs_plugin = JobsPlugin("jobs", "", s)
 
-cmd = f"cd agent && ./generate-compose.sh {num_containers} && make up && make connect"
+ssh_cmd = f"TARGET_LIGHTNING_ID={clearml_lightning_id} ./connect"
+cmd = f"cd agent && ./generate-compose.sh {num_containers} && make up && make logs && {ssh_cmd}"
 launched_job = jobs_plugin.run(cmd, name=job_name, machine=machine)
 # job_name = jobs_plugin.run(cmd, machine=machine)
 

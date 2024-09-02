@@ -16,5 +16,7 @@
 - [X] services mode allowing for package installs
 - [ ] test a queue with venv disabled (`stable`)
 - [ ] test on/off robustness
+- [ ] document `make ssh-agent >> agent/makefile` / `make connect` / `on_start.sh` in agent (can we avoid this?). document deleting one line (automate it?)
+- [ ] maybe harden autossh? (see if ssh alone is enough)
 
 The default secret for the system's apiserver component can be overridden by setting the following environment variable: CLEARML__SECURE__CREDENTIALS__APISERVER__USER_SECRET="my-new-secret"

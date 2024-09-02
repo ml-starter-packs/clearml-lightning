@@ -5,7 +5,7 @@
 # Function to clean up background jobs
 cleanup() {
     echo "Terminating SSH tunnels..."
-    kill -- -$$
+    pkill -P $$
     echo "All tunnels closed."
     exit 0
 }

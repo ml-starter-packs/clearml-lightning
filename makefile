@@ -24,12 +24,17 @@ restart-services:
 	docker compose stop agent-services; docker compose up -d --no-deps --force-recreate agent-services
 
 chaos:
+	@echo "Severing all ssh connections to test resiliency"
 	ps aux | grep "sshd" | grep -v grep | awk '{ print $$2 }' | sudo xargs kill -9
 
-DOMAIN ?= 8000-$${LIGHTNING_CLOUDSPACE_HOST}
+ps:	
+	@echo "Watching connections"
+	watch 'ps aux | grep sshd'
 
-replace:
-	sed -i "s/mydomain\.com/$(DOMAIN)/g" nginx.conf
+
+# DOMAIN ?= 8000-$${LIGHTNING_CLOUDSPACE_HOST}
+# replace:
+# 	sed -i "s/mydomain\.com/$(DOMAIN)/g" nginx.conf
 
 fresh: down
 	sudo rm -rf ~/opt ~/usr /opt/clearml/
@@ -42,6 +47,8 @@ fresh: down
 	sudo mkdir -p ~/opt/clearml/config
 	sudo mkdir -p ~/opt/clearml/data/fileserver
 	sudo chown -R $$(id -u):$$(id -g) ~/opt/clearml/
+	@echo "Removing API credentials..."
+	rm .env agent/.env
 	@echo "\nCleaned everything up!"
 
 install: .env .services.env
@@ -68,10 +75,10 @@ logs:
 
 host:
 	@echo "Run the following:"
-	@echo "\n\t TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} connect\n"
+	@echo "\n\tTARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} connect\n"
 
-	@echo "\n Alternatively, from another (agent) studio:"
-	@echo "\n\t TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} ./connect.sh\n"
+ssh-agent:
+	@echo "\nssh:\n\tTARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID} connect\n"
 
 keys:
 	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")'
@@ -81,9 +88,16 @@ keys:
 	@cp .env.template .env
 	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")' >> .env
 
-agent.tar.gz:
-	tar -cvzf agent.tar.gz agent/
+agent/.env: .env agent/.env.template
+	cd agent && make .env
+	@echo "# auto-populated from ../.env:" >> agent/.env
+	@cat .env | tail -n 2 >> agent/.env
 
+agent.tar.gz: connect agent/.env agent/makefile
+	@echo "Creating connection executable(s)..."
+	cp connect agent/connect
+	@echo "Packaging agent tar file"
+	tar -cvzf agent.tar.gz agent/
 
 .services.env: lightning_env.sh
 	./lightning_env.sh > .services.env

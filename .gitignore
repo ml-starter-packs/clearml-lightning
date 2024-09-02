@@ -166,3 +166,5 @@ cython_debug/
 *.png
 *.tar.gz
 *.env
+connect
+agent/connect

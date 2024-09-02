@@ -207,7 +207,7 @@ services:
     depends_on:
       - apiserver
     entrypoint: >
-      bash -c "curl --retry 10 --retry-delay 2 --retry-connrefused 'http://0.0.0.0:8008/debug.ping' && /usr/agent/entrypoint.sh"
+      bash -c "curl --retry 10 --retry-delay 5 --retry-connrefused 'http://0.0.0.0:8008/debug.ping' && /usr/agent/entrypoint.sh"
 
 networks:
   backend:

@@ -50,7 +50,7 @@ def add_steps(
     if not isinstance(feature_list, list):
         raise ValueError("`feature_list` must be a list of strings")
 
-    for i in range(num_copies):
+    for i in range(num_copies, 0, -1):
         pipe.add_step(
             name=f"T{i:04d}",
             base_task_name="demo-task",

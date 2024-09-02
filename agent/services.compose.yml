@@ -1,0 +1,32 @@
+  agent-services:
+    network_mode: host
+    container_name: clearml-agent-services
+    image: allegroai/clearml-agent-services:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+    privileged: true
+    environment:
+      CLEARML_HOST_IP: 0.0.0.0
+      CLEARML_API_ACCESS_KEY: ${CLEARML_AGENT_ACCESS_KEY:-$CLEARML_API_ACCESS_KEY}
+      CLEARML_API_SECRET_KEY: ${CLEARML_AGENT_SECRET_KEY:-$CLEARML_API_SECRET_KEY}
+      CLEARML_AGENT_GIT_USER: ${CLEARML_AGENT_GIT_USER}
+      CLEARML_AGENT_GIT_PASS: ${CLEARML_AGENT_GIT_PASS}
+      CLEARML_AGENT_UPDATE_VERSION: ${CLEARML_AGENT_UPDATE_VERSION:->=1.9.0}
+      CLEARML_AGENT_DEFAULT_BASE_DOCKER: "python:3.10.10"
+      CLEARML_WORKER_ID: "clearml-services"
+      CLEARML_AGENT_DAEMON_OPTIONS: "${CLEARML_AGENT_DAEMON_OPTIONS:---services-mode 5 --create-queue}"
+      CLEARML_AGENT_QUEUES: ${CLEARML_AGENT_QUEUES:-services}
+      CLEARML_AGENT_EXTRA_DOCKER_ARGS: "--network=host"
+      # AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      # AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      CLEARML_AGENT_DOCKER_HOST_MOUNT: "/teamspace/studios/this_studio/opt/clearml/agent:/root/.clearml"
+      SHUTDOWN_IF_NO_ACCESS_KEY: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/opt/clearml/agent:/root/.clearml
+      - .services.env:/usr/agent/.services.env:ro
+    entrypoint: >
+      bash -c "curl --retry 10 --retry-delay 5 --retry-connrefused 'http://0.0.0.0:8008/debug.ping' && /usr/agent/entrypoint.sh"
+
+# TODO: copy .services.env into here, update instructions. make sure to create ~/opt/clearml/agent

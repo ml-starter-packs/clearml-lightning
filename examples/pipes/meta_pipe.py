@@ -19,11 +19,16 @@ pipe.add_parameter(
     name="features",
     default=[["a", "b"], ["c", "d", "e"]],
 )
+pipe.add_parameter(
+    name="task_queue",
+    default="scale",
+)
 
 default_params = pipe.get_parameters()
 dynamic_params = pipe._task.get_parameters_as_dict().get("Args", default_params)
 num_copies = dynamic_params.get("num_copies")
 features = dynamic_params.get("features")
+task_queue = dynamic_params.get("task_queue")
 
 if not isinstance(num_copies, list):
     num_copies = num_copies.replace("[", "").replace("]", "").split(",")
@@ -39,6 +44,7 @@ for idx in range(len(num_copies)):
         parameter_override={
             "Args/num_copies": nc,
             "Args/feature_list": fl,
+            "Args/task_queue": task_queue,
         },
         execution_queue="services",
     )

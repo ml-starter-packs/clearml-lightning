@@ -21,6 +21,13 @@ def init_params(pipe: PipelineController) -> PipelineController:
         description="feature list to be passed to task",
         param_type="List[str]",
     )
+
+    pipe.add_parameter(
+        name="task_queue",
+        default="default",
+        description="execution queue for the tasks",
+        param_type="str",
+    )
     return pipe
 
 
@@ -35,6 +42,7 @@ def add_steps(
         raise ValueError("`num_copies` mmust be a positive integer")
 
     feature_list = params.get("feature_list")
+    execution_queue = params.get("task_queue", "default")
     if feature_list is None:
         feature_list = default_params.get("feature_list")
     else:
@@ -56,7 +64,7 @@ def add_steps(
                 ),  # must be string (to deserialize later)
                 "feature_dict": {"feature_10": False},  # this is now the new value.
             },
-            execution_queue="default",
+            execution_queue=execution_queue,
         )
     return pipe
 

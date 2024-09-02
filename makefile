@@ -44,9 +44,10 @@ fresh: down
 	sudo chown -R $$(id -u):$$(id -g) ~/opt/clearml/
 	@echo "\nCleaned everything up!"
 
-install: .env
+install: .env .services.env
 	./setup.sh
 	cp config.yml on_start.sh on_stop.sh ~/.lightning_studio/
+	@echo "Installation complete"
 
 status:
 	@docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"
@@ -84,5 +85,5 @@ agent.tar.gz:
 	tar -cvzf agent.tar.gz agent/
 
 
-.services.env:
+.services.env: lightning_env.sh
 	./lightning_env.sh > .services.env

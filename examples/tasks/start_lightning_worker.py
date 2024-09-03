@@ -23,6 +23,9 @@ params = task.connect(
         "containers_per_machine": 1,
         "job_name": "test-launch-remote",
         "clearml_lightning_id": "01j4yhm4nz7bq29tcbcpqkpzp9",
+        "worker_studio_name": "worker-clearml-opensource",
+        "queues": "scale",
+        "agent_path": "/teamspace/studios/clearml-opensource/clearml-lightning/agent.tar.gz",
     }
 )
 task.execute_remotely(queue_name=None)
@@ -30,6 +33,8 @@ task.execute_remotely(queue_name=None)
 machine_type = params.get("machine")
 job_name = params.get("job_name", "default-job-name")
 clearml_lightning_id = params.get("clearml_lightning_id")
+worker_studio_name = params.get("worker_studio_name", "default-clearml-worker")
+queues = params.get("queues", "default")
 
 if not clearml_lightning_id:
     print("ERROR: no clearml_lightning_id set.")
@@ -38,9 +43,10 @@ if not clearml_lightning_id:
 machine = getattr(Machine, machine_type)
 
 num_containers = params["containers_per_machine"]
+agent_path = params["agent_path"]
 
 # start studio
-s = Studio("worker-clearml-opensource")
+s = Studio(worker_studio_name)
 # s.start()
 
 # use the jobs plugin
@@ -48,7 +54,9 @@ s = Studio("worker-clearml-opensource")
 jobs_plugin = JobsPlugin("jobs", "", s)
 
 ssh_cmd = f"TARGET_LIGHTNING_ID={clearml_lightning_id} ./connect"
-cmd = f"cd agent && ./generate-compose.sh {num_containers} && make up && make logs && {ssh_cmd}"
+setup_cmd = f"cp {agent_path} . && rm -rf agent && tar xvzf agent.tar.gz &&"
+cmd = f'cd agent && sed -i \'s|CLEARML_AGENT_QUEUES="default"|CLEARML_AGENT_QUEUES="{queues}"|g\' .env '
+cmd += f"&& ./generate-compose.sh {num_containers} && make up && make logs && {ssh_cmd}"
 launched_job = jobs_plugin.run(cmd, name=job_name, machine=machine)
 # job_name = jobs_plugin.run(cmd, machine=machine)
 

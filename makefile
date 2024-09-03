@@ -1,4 +1,4 @@
-up:
+up: .env .services.env
 	docker compose up -d
 
 down:
@@ -37,6 +37,7 @@ ps:
 # 	sed -i "s/mydomain\.com/$(DOMAIN)/g" nginx.conf
 
 fresh: down
+	@cd agent && make down & cd ..
 	sudo rm -rf ~/opt ~/usr /opt/clearml/
 	sudo mkdir -p ~/opt/clearml/
 	sudo mkdir -p ~/opt/clearml/data/elastic_7
@@ -48,7 +49,7 @@ fresh: down
 	sudo mkdir -p ~/opt/clearml/data/fileserver
 	sudo chown -R $$(id -u):$$(id -g) ~/opt/clearml/
 	@echo "Removing API credentials..."
-	rm .env agent/.env
+	rm .env agent/.env .services.env
 	@echo "\nCleaned everything up!"
 
 install: .env .services.env
@@ -91,7 +92,7 @@ keys:
 agent/.env: .env agent/.env.template
 	cd agent && make .env
 	@echo "# auto-populated from ../.env:" >> agent/.env
-	@cat .env | tail -n 2 >> agent/.env
+	@cat .env | tail -n 2 | sed 's|AGENT|API|g' >> agent/.env
 
 agent.tar.gz: connect agent/.env agent/makefile
 	@echo "Creating connection executable(s)..."

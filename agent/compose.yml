@@ -1,6 +1,6 @@
 x-worker_template: &worker_defaults
   image: worker
-  cpu_count: 1
+  # cpu_count: 1
   deploy:
     restart_policy:
       condition: unless-stopped
@@ -29,3 +29,24 @@ services:
     environment:
       CLEARML_WORKER_ID: "A002-onprem"
       CLEARML_WORKER_NAME: "A002-onprem"
+
+  worker_003:
+    <<: *worker_defaults
+    container_name: worker003
+    environment:
+      CLEARML_WORKER_ID: "A003-onprem"
+      CLEARML_WORKER_NAME: "A003-onprem"
+
+  worker_004:
+    <<: *worker_defaults
+    container_name: worker004
+    environment:
+      CLEARML_WORKER_ID: "A004-onprem"
+      CLEARML_WORKER_NAME: "A004-onprem"
+
+  worker_005:
+    <<: *worker_defaults
+    container_name: worker005
+    environment:
+      CLEARML_WORKER_ID: "A005-onprem"
+      CLEARML_WORKER_NAME: "A005-onprem"

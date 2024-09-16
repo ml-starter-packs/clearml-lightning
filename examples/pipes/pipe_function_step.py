@@ -3,7 +3,7 @@ from typing import Any, Dict
 from clearml import Task
 from clearml.automation import PipelineController
 
-from clearml_pipe_utils import deserialize_dict  # noqa
+from utils import deserialize_dict  # noqa
 
 
 def do_something(task_num):

@@ -22,7 +22,7 @@ params = task.connect(
         "machine": "CPU_SMALL",
         "containers_per_machine": 1,
         "job_name": "test-launch-remote",
-        "clearml_lightning_id": "01j4yhm4nz7bq29tcbcpqkpzp9",
+        "clearml_lightning_id": os.environ.get("LIGHTNING_CLOUD_SPACE_ID"),
         "worker_studio_name": "worker-clearml-opensource",
         "queues": "scale",
         "agent_path": "/teamspace/studios/clearml-opensource/clearml-lightning/agent.tar.gz",

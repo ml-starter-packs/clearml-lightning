@@ -1,0 +1,20 @@
+# This config file controls the current studio.
+
+# File paths specified here should be relative to your home directory.
+# For more information visit https://lightning.ai/docs/overview/studios/on-start-actions#load-files-faster
+fast-load:
+# clearml's state
+- opt/clearml/**
+# the docker depoyment
+- clearml-lightning/**
+# for client-server config
+- clearml.conf
+- usr/share/elasticsearch/logs/**
+
+lazy-persist:
+- opt/clearml/**
+- usr/share/elasticsearch/logs/**
+
+final-persist:
+# clearml's state
+- opt/clearml/**

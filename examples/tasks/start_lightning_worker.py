@@ -54,7 +54,7 @@ s = Studio(worker_studio_name)
 jobs_plugin = JobsPlugin("jobs", "", s)
 
 ssh_cmd = f"TARGET_LIGHTNING_ID={clearml_lightning_id} ./connect"
-setup_cmd = f"cp {agent_path} . && rm -rf agent && tar xvzf agent.tar.gz &&"
+# setup_cmd = f"cp {agent_path} . && rm -rf agent && tar xvzf agent.tar.gz &&"
 cmd = f'cd agent && sed -i \'s|CLEARML_AGENT_QUEUES="default"|CLEARML_AGENT_QUEUES="{queues}"|g\' .env '
 cmd += f"&& ./generate-compose.sh {num_containers} && make up && make logs && {ssh_cmd}"
 launched_job = jobs_plugin.run(cmd, name=job_name, machine=machine)

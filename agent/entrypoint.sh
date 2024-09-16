@@ -1,5 +1,12 @@
 #!/bin/bash +x
 
+# if TARGET_LIGHTNING_ID is missing, exit
+if [ -z "TARGET_LIGHTNING_ID" ]; then
+  echo "TARGET_LIGHTNING_ID is missing, exiting"
+  exit 1
+fi
+TARGET_LIGHTNING_ID="${TARGET_LIGHTNING_ID}" /usr/bin/connect
+
 if [ -n "$SHUTDOWN_IF_NO_ACCESS_KEY" ] && [ -z "$CLEARML_API_ACCESS_KEY" ] && [ -z "$TRAINS_API_ACCESS_KEY" ]; then
   echo "CLEARML_API_ACCESS_KEY was not provided, service will not be started"
   exit 0

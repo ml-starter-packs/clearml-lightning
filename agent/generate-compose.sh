@@ -21,8 +21,12 @@ x-worker_template: &worker_defaults
   privileged: false
   env_file: .env
   network_mode: host
-  # volumes:
-  #   - ./entrypoint.sh:/home/agent/entrypoint.sh
+  volumes:
+    - ~/.ssh/lightning_rsa.pub:/home/user/.ssh/lightning_rsa.pub:ro
+    - ~/.ssh/lightning_rsa:/home/user/.ssh/lightning_rsa:ro
+    - ~/.ssh/config:/home/user/.ssh/config:ro
+    - ./connect:/usr/bin/connect
+    - ./entrypoint.sh:/home/agent/entrypoint.sh
   entrypoint: >
     bash -c "curl --retry 10 --retry-delay 2 --retry-connrefused 'http://0.0.0.0:8008/debug.ping' && /home/agent/entrypoint.sh"
 

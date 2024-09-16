@@ -88,12 +88,14 @@ keys:
 	@echo "Creating \`.env\` and populating secrets"
 	@cp .env.template .env
 	@python3 -c 'import secrets; print(f"CLEARML_AGENT_ACCESS_KEY={secrets.token_hex(16)}\nCLEARML_AGENT_SECRET_KEY={secrets.token_hex(32)}")' >> .env
+	@echo "TARGET_LIGHTNING_ID=$${LIGHTNING_CLOUD_SPACE_ID}" >> .env
 
 agent/.env: .env agent/.env.template
 	cd agent && make .env
 	@echo "# auto-populated from ../.env:" >> agent/.env
-	@cat .env | tail -n 2 | sed 's|AGENT|API|g' >> agent/.env
+	@cat .env | tail -n 3 | sed 's|AGENT|API|g' >> agent/.env
 
+# connect is an implicit target for make. it'll become executable.
 agent.tar.gz: connect agent/.env agent/makefile
 	@echo "Creating connection executable(s)..."
 	cp connect agent/connect

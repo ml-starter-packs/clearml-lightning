@@ -29,7 +29,7 @@ establish_tunnel() {
 }
 
 # Establish a single tunnel shared by all containers on the machine
-establish_tunnel 8080 8080 $TARGET_LIGHTNING_ID &
+# establish_tunnel 8080 8080 $TARGET_LIGHTNING_ID &
 establish_tunnel 8008 8008 $TARGET_LIGHTNING_ID &
 establish_tunnel 8081 8081 $TARGET_LIGHTNING_ID &
 

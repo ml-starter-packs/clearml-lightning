@@ -18,5 +18,5 @@ logs:
 	docker logs -f worker001
 
 .env: .env.template
-	@echo "Creating \`.env\` and populating secrets"
+	@echo "Creating \`.env\`"
 	@cp .env.template .env

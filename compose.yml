@@ -46,14 +46,14 @@ services:
       - backend
     container_name: clearml-elastic
     environment:
-      ES_JAVA_OPTS: "-Xms2g -Xmx2g -Dlog4j2.formatMsgNoLookups=true"
+      ES_JAVA_OPTS: "-Xms8g -Xm8g -Dlog4j2.formatMsgNoLookups=true"
       # ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
       bootstrap.memory_lock: "true"
       cluster.name: clearml
-      cluster.routing.allocation.node_initial_primaries_recoveries: "500"
-      cluster.routing.allocation.disk.watermark.low: 500mb
-      cluster.routing.allocation.disk.watermark.high: 500mb
-      cluster.routing.allocation.disk.watermark.flood_stage: 500mb
+      cluster.routing.allocation.node_initial_primaries_recoveries: "1000"
+      cluster.routing.allocation.disk.watermark.low: 50gb
+      cluster.routing.allocation.disk.watermark.high: 50gb
+      cluster.routing.allocation.disk.watermark.flood_stage: 50gb
       discovery.type: "single-node"
       http.compression_level: "7"
       node.name: clearml
